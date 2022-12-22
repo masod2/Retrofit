@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityLogInBinding;
-import com.example.Retrofit.model.LoginViewModel;
+import com.example.Retrofit.model.authenticationViewModel;
 import com.example.Retrofit.serr.TokenSaver;
 
 
@@ -51,19 +51,25 @@ public class LogInActivity extends AppCompatActivity {
         });
         binding.btnLogin.setOnClickListener(v -> {
             Toast.makeText(this, "Try login     ", Toast.LENGTH_SHORT).show();
-            LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+            authenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(authenticationViewModel.class);
             if (isValid()) {
 
             if (binding.checkBox2.isChecked()) {
-                loginViewModel.loginAsDelivery(getApplicationContext(),binding.edEmail.getText().toString().trim(),binding.edPassword.getText().toString().trim());
-                loginViewModel.MutableLiveData.observe(this,loginResponseBaseResponse -> TokenSaver.setToken(getApplicationContext(),loginResponseBaseResponse.getData().get(0).getToken()) );
-                startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
-                finish();
+                authenticationViewModel.loginAsDelivery(getApplicationContext(),binding.edEmail.getText().toString().trim(),binding.edPassword.getText().toString().trim());
+                authenticationViewModel.MutableLiveData.observe(this, loginResponseBaseResponse ->  {} );
+                if (!TokenSaver.getToken(this).equals("")) {
+                    startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
+                    finish();
+                }
+
             } else {
-                loginViewModel.loginAsUser(getApplicationContext(),binding.edEmail.getText().toString().trim(),binding.edPassword.getText().toString().trim());
-                loginViewModel.MutableLiveData.observe(this,loginResponseBaseResponse -> TokenSaver.setToken(getApplicationContext(),loginResponseBaseResponse.getData().get(0).getToken()) );
-                startActivity(new Intent(getApplicationContext(), CustomerHome.class));
-                finish();
+                authenticationViewModel.loginAsUser(getApplicationContext(),binding.edEmail.getText().toString().trim(),binding.edPassword.getText().toString().trim());
+                authenticationViewModel.MutableLiveData.observe(this, loginResponseBaseResponse ->  {} );
+                if (!TokenSaver.getToken(this).equals("")) {
+                    Toast.makeText(this, TokenSaver.getToken(getApplicationContext()), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), CustomerHome.class));
+                    finish();
+                }
             }
              }
         });

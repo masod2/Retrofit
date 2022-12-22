@@ -3,7 +3,7 @@ package com.example.Retrofit.Data;
 
 import com.example.Retrofit.model.BaseResponse;
 import com.example.Retrofit.model.HomeDeliverReq;
-import com.example.Retrofit.model.LoginResponse;
+import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.model.Work;
 
 import retrofit2.Call;
@@ -17,14 +17,12 @@ public interface DataInterface {
     Call<BaseResponse<Work>> getWorks();
     @GET("home/deliver")
     Call<BaseResponse<HomeDeliverReq>> homeDeliverReq();
-    @GET("auth/logout")
-    Call<Void> logOut();
     @FormUrlEncoded
     @POST("auth/login/user")
-    Call<BaseResponse<LoginResponse>> loginUser(@Field("email") String email, @Field("password") String password);
+    Call<BaseResponse<authenticationResponse>> loginUser(@Field("email") String email, @Field("password") String password);
     @FormUrlEncoded
     @POST("auth/login/delivery")
-    Call<BaseResponse<LoginResponse>> loginDelivery(@Field("email") String email, @Field("password") String password);
+    Call<BaseResponse<authenticationResponse>> loginDelivery(@Field("email") String email, @Field("password") String password);
     @GET("auth/logout")
     Call<BaseResponse> logout();
 }

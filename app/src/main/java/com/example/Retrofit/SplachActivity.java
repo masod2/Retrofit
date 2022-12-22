@@ -48,7 +48,7 @@ public class SplachActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), LogInActivity.class));
                     finish();
                 } else {
-                    if (TokenSaver.IsDelevery(this)) {
+                    if (TokenSaver.IsDelivery(this)) {
                         startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
                         finish();
                     } else {

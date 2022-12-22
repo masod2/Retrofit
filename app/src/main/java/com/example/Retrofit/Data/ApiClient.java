@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.Retrofit.model.BaseResponse;
 import com.example.Retrofit.model.HomeDeliverReq;
-import com.example.Retrofit.model.LoginResponse;
+import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.model.Work;
 import com.example.Retrofit.serr.TokenSaver;
 
@@ -73,11 +73,11 @@ public class ApiClient {
         return dataInterface.homeDeliverReq();
     }
 
-    public Call<BaseResponse<LoginResponse>> loginUser(@Field("email") String email, @Field("password") String password) {
+    public Call<BaseResponse<authenticationResponse>> loginUser(@Field("email") String email, @Field("password") String password) {
         return dataInterface.loginUser(email, password);
     }
 
-    public Call<BaseResponse<LoginResponse>> loginDelivery(@Field("email") String email, @Field("password") String password) {
+    public Call<BaseResponse<authenticationResponse>> loginDelivery(@Field("email") String email, @Field("password") String password) {
         return dataInterface.loginDelivery(email, password);
     }
 

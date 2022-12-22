@@ -3,40 +3,29 @@ package com.example.Retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse {
+public class authenticationResponse {
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("photo")
-    @Expose
-    private String photo;
     @SerializedName("phone")
     @Expose
     private String phone;
+    @SerializedName("work_id")
+    @Expose
+    private String workId;
     @SerializedName("active")
     @Expose
     private String active;
-    @SerializedName("work_id ")
+    @SerializedName("type_user")
     @Expose
-    private String workId;
+    private String typeUser;
     @SerializedName("token")
     @Expose
     private String token;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -54,20 +43,20 @@ public class LoginResponse {
         this.email = email;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getWorkId() {
+        return workId;
+    }
+
+    public void setWorkId(String workId) {
+        this.workId = workId;
     }
 
     public String getActive() {
@@ -78,12 +67,12 @@ public class LoginResponse {
         this.active = active;
     }
 
-    public String getWorkId() {
-        return workId;
+    public String getTypeUser() {
+        return typeUser;
     }
 
-    public void setWorkId(String workId) {
-        this.workId = workId;
+    public void setTypeUser(String typeUser) {
+        this.typeUser = typeUser;
     }
 
     public String getToken() {

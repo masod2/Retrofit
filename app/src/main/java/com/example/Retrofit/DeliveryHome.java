@@ -17,9 +17,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityDeleveryHomeBinding;
 import com.example.Retrofit.model.HomeDeliverReq;
-import com.example.Retrofit.model.LoginViewModel;
+import com.example.Retrofit.model.HomeDeliverReqViewModel;
 import com.example.Retrofit.model.PhotoOrderHome;
 import com.example.Retrofit.model.Work;
+import com.example.Retrofit.model.authenticationViewModel;
 import com.example.Retrofit.serr.ReAdapter;
 import com.example.Retrofit.serr.TokenSaver;
 
@@ -45,7 +46,16 @@ public class DeliveryHome extends AppCompatActivity {
         url = "https://studentucas.awamr.com/api/home/deliver";
  // التحقق من وجود توكن
         if (!TokenSaver.getToken(this).equals("")) {
-            postTokenToHome();
+            HomeDeliverReqViewModel homeDeliverReqViewModel= new ViewModelProvider(this ).get(HomeDeliverReqViewModel.class);
+            homeDeliverReqViewModel.homeDeliverReq(getApplicationContext());
+            homeDeliverReqViewModel.MutableLiveData.observe(this, homeDeliverReqs -> {
+                ReAdapter adabter = new ReAdapter((ArrayList<HomeDeliverReq>) homeDeliverReqs);
+                binding.resy.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                binding.resy.setAdapter(adabter);
+            });
+
+
+          //  postTokenToHome();
 
             Toast.makeText(this, "DONE", Toast.LENGTH_SHORT).show();
 
@@ -57,14 +67,14 @@ public class DeliveryHome extends AppCompatActivity {
         binding.logout.setOnClickListener(v -> {
              // التحقق من وجود توكن
             if (!TokenSaver.getToken(this).equals("")) {
-                LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-                loginViewModel.logout(getApplicationContext());
-                startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
-                finish();
+                authenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(authenticationViewModel.class);
+                authenticationViewModel.logout(getApplicationContext());
+
 
             } else {
                 Toast.makeText(this, "token not exist please log in to load data", Toast.LENGTH_SHORT).show();
-
+                startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
+                finish();
             }
         });
 

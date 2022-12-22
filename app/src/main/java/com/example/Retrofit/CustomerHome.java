@@ -15,7 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityCustumerHomeBinding;
-import com.example.Retrofit.model.LoginViewModel;
+import com.example.Retrofit.model.authenticationViewModel;
 import com.example.Retrofit.serr.TokenSaver;
 
 import org.json.JSONArray;
@@ -36,8 +36,8 @@ public class    CustomerHome extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.logOut.setOnClickListener(v -> {
-            LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-            loginViewModel.logout(getApplicationContext());
+            authenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(authenticationViewModel.class);
+            authenticationViewModel.logout(getApplicationContext());
             startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
             finish();
         });

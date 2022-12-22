@@ -7,12 +7,12 @@ import android.content.SharedPreferences;
 import com.example.Retrofit.LogInActivity;
 
 public class TokenSaver {
-    public static boolean IsDelevery(Context c) {
+    public static boolean IsDelivery(Context c) {
         SharedPreferences prefs = c.getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE);
         return prefs.getBoolean("isDelevery", false);
     }
 
-    public static void setIsDelevery(Context c, boolean isDelevery) {
+    public static void setIsDelivery(Context c, boolean isDelevery) {
         SharedPreferences prefs = c.getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("isDelevery", isDelevery);
