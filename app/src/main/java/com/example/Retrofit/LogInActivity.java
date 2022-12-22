@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityLogInBinding;
 import com.example.Retrofit.model.LoginViewModel;
@@ -21,8 +20,7 @@ import com.example.Retrofit.serr.TokenSaver;
 public class LogInActivity extends AppCompatActivity {
     ActivityLogInBinding binding;
     RequestQueue queue;
-    JsonObjectRequest objectRequest;
-    String url, password, email;
+     String   password, email;
 
 
     @Override

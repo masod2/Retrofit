@@ -1,6 +1,5 @@
 package com.example.Retrofit;
 
-import static com.android.volley.Request.Method.GET;
 import static com.android.volley.Request.Method.POST;
 
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.volley.RequestQueue;
@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityDeleveryHomeBinding;
 import com.example.Retrofit.model.HomeDeliverReq;
+import com.example.Retrofit.model.LoginViewModel;
 import com.example.Retrofit.model.PhotoOrderHome;
 import com.example.Retrofit.model.Work;
 import com.example.Retrofit.serr.ReAdapter;
@@ -54,10 +55,12 @@ public class DeliveryHome extends AppCompatActivity {
 
         }
         binding.logout.setOnClickListener(v -> {
-            url = "https://studentucas.awamr.com/api/auth/logout";
-            // التحقق من وجود توكن
+             // التحقق من وجود توكن
             if (!TokenSaver.getToken(this).equals("")) {
-                LogOut();
+                LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+                loginViewModel.logout(getApplicationContext());
+                startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
+                finish();
 
             } else {
                 Toast.makeText(this, "token not exist please log in to load data", Toast.LENGTH_SHORT).show();
@@ -68,66 +71,6 @@ public class DeliveryHome extends AppCompatActivity {
 
     }
 
-    private void LogOut() {
-        String token = TokenSaver.getToken(this);
-
-        Toast.makeText(this, "Start loging out", Toast.LENGTH_SHORT).show();
-        binding.progressBar3.setVisibility(View.VISIBLE);
-        Log.e("Stateee", "LogOut 1 ");
-
-//انشاء ريكويست جديد
-        JsonObjectRequest objectRequest = new JsonObjectRequest(GET, url, null
-                , response -> {
-            binding.progressBar3.setVisibility(View.INVISIBLE);
-            Log.e("Stateee", "on Request 3 ");
-
-            //فحص حالة استجابة السيرفر
-            try {
-                // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
-                if (response.getBoolean("success")) {                    //ما يحدث عند نجاح الاستقبال
-                    Log.e("Stateee", "on success 4 ");
-
-                    Toast.makeText(this, response.getString("message"), Toast.LENGTH_SHORT).show();
-                    TokenSaver.logout(this);
-
-                } else {
-
-                    // (اخطاء مدخلات )ما يحدث عند فشل  الاستقبال
-                    Toast.makeText(getApplicationContext(), response.getString("Unauthenticated") + response.getString("error"), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), response.getString("التوكن منتهى الصلاحية أو غير موجود   ") + response.getString("error"), Toast.LENGTH_SHORT).show();
-                    Log.e("Stateee", "  input rong  5 ");
-
-                }
-                Log.e("Stateee", "  after intent   6 ");
-
-                startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
-                finish();
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }, error -> {
-            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            binding.progressBar3.setVisibility(View.INVISIBLE);
-
-            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", token);
-                return headers;
-
-            }
-
-        };
-        binding.progressBar3.setVisibility(View.INVISIBLE);
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(objectRequest);
-
-    } // end method LogOut
 
     private void postTokenToHome() {
         String token = TokenSaver.getToken(this);

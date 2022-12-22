@@ -25,4 +25,6 @@ public interface DataInterface {
     @FormUrlEncoded
     @POST("auth/login/delivery")
     Call<BaseResponse<LoginResponse>> loginDelivery(@Field("email") String email, @Field("password") String password);
+    @GET("auth/logout")
+    Call<BaseResponse> logout();
 }

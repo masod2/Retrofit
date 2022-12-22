@@ -77,8 +77,12 @@ public class ApiClient {
         return dataInterface.loginUser(email, password);
     }
 
-    public Call<BaseResponse<LoginResponse>> loginDelivery(@Field("email") String email, @Field("password") String password){
+    public Call<BaseResponse<LoginResponse>> loginDelivery(@Field("email") String email, @Field("password") String password) {
         return dataInterface.loginDelivery(email, password);
+    }
+
+    public Call<BaseResponse> logout() {
+        return dataInterface.logout();
     }
 
 

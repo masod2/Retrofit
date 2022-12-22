@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.Retrofit.Data.ApiClient;
+import com.example.Retrofit.serr.TokenSaver;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +51,26 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onFailure(Call<BaseResponse<LoginResponse>> call, Throwable t) {
                 MutableLiveData.setValue(null);
+
+            }
+        });
+    }
+    public void logout (Context context){
+        ApiClient.getINSTANCE(context).logout().enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if (response.isSuccessful()  ) {
+                    MutableLiveData.setValue(response.body());
+                    TokenSaver.logout(context);
+                }else {
+                    MutableLiveData.setValue(null );
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
 
             }
         });
