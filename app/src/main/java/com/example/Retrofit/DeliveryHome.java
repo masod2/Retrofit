@@ -15,8 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.Retrofit.Sett.Datum;
 import com.example.Retrofit.databinding.ActivityDeleveryHomeBinding;
+import com.example.Retrofit.model.HomeDeliverReq;
+import com.example.Retrofit.model.PhotoOrderHome;
 import com.example.Retrofit.model.Work;
 import com.example.Retrofit.serr.ReAdapter;
 import com.example.Retrofit.serr.TokenSaver;
@@ -32,7 +33,7 @@ import java.util.Map;
 public class DeliveryHome extends AppCompatActivity {
     ActivityDeleveryHomeBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
     String url;
-    ArrayList<Datum> datumArrayList = new ArrayList<>();
+    ArrayList<HomeDeliverReq> datumArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,10 +157,10 @@ public class DeliveryHome extends AppCompatActivity {
                         String created_at = jsonObject1.getString("created_at");
                         Log.d("Statee", orderid + workName + created_at + workid + imgs);
 
-                        Datum datum = new Datum();
+                        HomeDeliverReq datum = new HomeDeliverReq();
                         datum.setId(orderid);
                         datum.setWork(new Work(workid, workName));
-                        datum.setPhoto(imgs);
+                        datum.setPhotoOrderHome(new PhotoOrderHome(imgs));
                         datum.setCreatedAt(created_at);
                         datum.setLat(jsonObject1.getString("lat"));
                         datum.setLong(jsonObject1.getString("long"));

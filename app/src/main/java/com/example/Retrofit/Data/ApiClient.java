@@ -24,7 +24,7 @@ public class ApiClient {
     private static String TAG = "ApiClient";
     private static final String BASE_URL = "https://studentucas.awamr.com/api/";
     private static ApiClient INSTANCE;
-    private     DataInterface dataInterface;
+    private DataInterface dataInterface;
 
     private static Retrofit getClient(boolean authorization, int v) {
 

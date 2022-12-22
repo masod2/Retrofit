@@ -1,8 +1,6 @@
 package com.example.Retrofit.serr;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.Retrofit.R;
-import com.example.Retrofit.Sett.Datum;
 import com.example.Retrofit.databinding.ItemBinding;
+import com.example.Retrofit.model.HomeDeliverReq;
 
 import java.util.ArrayList;
 
 public class ReAdapter extends RecyclerView.Adapter<ReAdapter.RecHolder> {
-    ArrayList<Datum> datumArrayList;
+    ArrayList<HomeDeliverReq> datumArrayList;
 
-    public ReAdapter(ArrayList<Datum> datumArrayList) {
+    public ReAdapter(ArrayList<HomeDeliverReq> datumArrayList) {
         this.datumArrayList = datumArrayList;
     }
 
@@ -34,7 +32,7 @@ public class ReAdapter extends RecyclerView.Adapter<ReAdapter.RecHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecHolder holder, int position) {
-        Datum datum = datumArrayList.get(position);
+        HomeDeliverReq datum = datumArrayList.get(position);
         //
         holder.bind(datum);
 
@@ -59,11 +57,11 @@ public class ReAdapter extends RecyclerView.Adapter<ReAdapter.RecHolder> {
 
 
         //تعبئة بيانات اليوزر بالتصميم
-        void bind(Datum datum) {
-            Glide.with(context).load(datum.getPhoto()).into(binding.image);
+        void bind(HomeDeliverReq datum) {
+            Glide.with(context).load(datum.getPhotoOrderHome().getPhoto()).into(binding.image);
             binding.id.setText(datum.getId() + "");
             binding.workname.setText("Servese tybe :" + datum.getWork().getName());
             binding.date.setText(datum.getCreatedAt());
-         }
+        }
     }
 }

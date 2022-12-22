@@ -21,4 +21,24 @@ public class BaseResponse<Model> {
     @SerializedName("object")
     @Expose
     public Model object;
+
+    public int getCode() {
+        return code;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<Model> getData() {
+        return data;
+    }
+
+    public Model getObject() {
+        return object;
+    }
 }
