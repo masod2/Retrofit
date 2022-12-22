@@ -1,10 +1,12 @@
 package com.example.Retrofit.Data;
 
-import androidx.annotation.NonNull;
+import android.content.Context;
 
-import com.example.Retrofit.BuildConfig;
 import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.HomeDeliverReq;
+import com.example.Retrofit.model.LoginResponse;
 import com.example.Retrofit.model.Work;
+import com.example.Retrofit.serr.TokenSaver;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -13,75 +15,71 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
 
 
 public class ApiClient {
-
-    private static String TAG = "ApiClient";
     private static final String BASE_URL = "https://studentucas.awamr.com/api/";
-    private static ApiClient INSTANCE;
     private DataInterface dataInterface;
+    private static ApiClient INSTANCE;
 
-    private static Retrofit getClient(boolean authorization, int v) {
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-
-        if (BuildConfig.DEBUG) {
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS);
-
-        httpClient.addInterceptor(logging);
-
-        httpClient.addInterceptor(new Interceptor() {
-                                      @Override
-                                      public Response intercept(@NonNull Chain chain) throws IOException {
-
-                                          Request original = chain.request();
-                                          Request request = original.newBuilder()
-                                                  .header("Content-Type", "application/x-www-form-urlencoded")
-                                                  .header("Accept", "application/json")
-                                                  // .header("Accept-Language", "ar")
-                                                  .header("Authorization", "")
-                                                  .method(original.method(), original.body())
-                                                  .build();
-
-                                          return chain.proceed(request);
-                                      }
-                                  }
-
-
-        );
-
-
-        return new Retrofit.Builder()
+    private ApiClient(Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(getClient(context))
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
                 .build();
-
-
+        dataInterface = retrofit.create(DataInterface.class);
     }
 
-    public static ApiClient getINSTANCE() {
+    public static ApiClient getINSTANCE(Context context) {
         if (null == INSTANCE) {
-            INSTANCE = new ApiClient();
+            INSTANCE = new ApiClient(context);
         }
         return INSTANCE;
     }
 
-    public Call<BaseResponse<Work>> getAllWork() {
-        return dataInterface.getAllWork();
+    private static OkHttpClient getClient(Context context) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(60, TimeUnit.SECONDS);
+        builder.writeTimeout(60, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                Request request = original.newBuilder()
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .header("Accept", "application/json")
+                        .header("Authorization", TokenSaver.getToken(context))
+                        .method(original.method(), original.body())
+                        .build();
+                return chain.proceed(request);
+            }
+        });
+        OkHttpClient client = builder.build();
+
+        return client;
     }
+
+    public Call<BaseResponse<Work>> getWorks() {
+        return dataInterface.getWorks();
+    }
+
+    public Call<BaseResponse<HomeDeliverReq>> homeDeliverReq() {
+        return dataInterface.homeDeliverReq();
+    }
+
+    public Call<BaseResponse<LoginResponse>> loginUser(@Field("email") String email, @Field("password") String password) {
+        return dataInterface.loginUser(email, password);
+    }
+
+    public Call<BaseResponse<LoginResponse>> loginDelivery(@Field("email") String email, @Field("password") String password){
+        return dataInterface.loginDelivery(email, password);
+    }
+
 
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -17,19 +16,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityRegisterBinding;
 import com.example.Retrofit.model.Work;
+import com.example.Retrofit.model.WorkViewModel;
 import com.example.Retrofit.serr.SpinAdapter;
 
 import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
-    Work.WorkViewModel workViewModel;
+    ArrayList<Work> dataWorkArrayList = new ArrayList<>();
 
     ActivityRegisterBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
     int id;
     SpinAdapter adapter;
     RequestQueue queue;
 
-    ArrayList<Work> dataWorks = new ArrayList<>();
     JsonObjectRequest objectRequest;
     String username, email, password, phone, name, url;
     boolean isValid = false;
@@ -54,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
             if (binding.checkBox.isChecked()) {
                 getData();
 
-                binding.spinner.setVisibility(View.VISIBLE);
                 url = "https://studentucas.awamr.com/api/auth/register/delivery";
 
             } else {
@@ -78,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         binding.btnRegister.setOnClickListener(v -> {
             if (isValid()) {
-                //postRegisterReq();
+                 //postRegisterReq();
             } else {
                 Toast.makeText(this, "please inter data in right method", Toast.LENGTH_SHORT).show();
             }
@@ -88,43 +86,25 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void getData() {
-        workViewModel = new ViewModelProvider(this).get(Work.WorkViewModel.class);
-         workViewModel.listMutableLiveData.observe(this, dataWorks -> {
-            ArrayList<Work> dataWorkArrayList = new ArrayList<>();
-
-            for (int i = 0; i < dataWorks.size(); i++) {
-
-                Log.e("Statee", "" + dataWorks.get(i).getName());
-                dataWorkArrayList.add(new Work(dataWorks.get(i).getId(), dataWorks.get(i).getName()));
-                adapter = new SpinAdapter(getApplicationContext(),
-                        android.R.layout.simple_spinner_item,
-                        dataWorkArrayList);
-
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                binding.spinner.setAdapter(adapter);
-
-
-                //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        Work work = (Work) binding.spinner.getSelectedItem();
-                        Toast.makeText(RegisterActivity.this, "Name: " + work.getName() + "\nid: " + work.getId() + "\n ", Toast.LENGTH_SHORT).show();
-
-
-                    }
-
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-            }
+        WorkViewModel workViewModel = new ViewModelProvider(this).get(WorkViewModel.class);
+        workViewModel.getWorks(getApplicationContext());
+        workViewModel.listMutableLiveData.observe(this, works -> {
+            adapter = new SpinAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, (ArrayList<Work>) works);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            binding.spinner.setAdapter(adapter);
+            binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Work work = (Work) binding.spinner.getSelectedItem();
+                    Toast.makeText(RegisterActivity.this, "Name: " + work.getName() + "\nid: " + work.getId() + "\n ", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+            binding.spinner.setVisibility(View.VISIBLE);
         });
     }
-
     public boolean isValid() {
 
 

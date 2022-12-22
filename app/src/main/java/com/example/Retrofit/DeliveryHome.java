@@ -42,7 +42,7 @@ public class DeliveryHome extends AppCompatActivity {
         setContentView(binding.getRoot());
         Log.e("Statee", "DeliveryHome");
         url = "https://studentucas.awamr.com/api/home/deliver";
-// التحقق من وجود توكن
+ // التحقق من وجود توكن
         if (!TokenSaver.getToken(this).equals("")) {
             postTokenToHome();
 

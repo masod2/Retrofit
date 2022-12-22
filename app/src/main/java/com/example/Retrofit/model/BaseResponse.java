@@ -38,7 +38,28 @@ public class BaseResponse<Model> {
         return data;
     }
 
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setData(List<Model> data) {
+        this.data = data;
+    }
+
+    public void setObject(Model object) {
+        this.object = object;
+    }
+
     public Model getObject() {
         return object;
     }
+
 }

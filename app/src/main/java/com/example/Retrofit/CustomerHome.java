@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomerHome extends AppCompatActivity {
+public class    CustomerHome extends AppCompatActivity {
     ActivityCustumerHomeBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
     SharedPreferences prefs;
     String url;

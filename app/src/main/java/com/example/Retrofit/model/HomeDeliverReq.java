@@ -4,7 +4,7 @@ package com.example.Retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
- public class HomeDeliverReq {
+public class HomeDeliverReq {
 
     @SerializedName("id")
     @Expose
@@ -116,5 +116,6 @@ import com.google.gson.annotations.SerializedName;
     public void setUser(User user) {
         this.user = user;
     }
+
 
 }

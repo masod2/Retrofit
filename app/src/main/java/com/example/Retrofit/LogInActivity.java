@@ -1,26 +1,21 @@
 package com.example.Retrofit;
 
 
-import static com.android.volley.Request.Method.POST;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.Retrofit.serr.TokenSaver;
 import com.example.Retrofit.databinding.ActivityLogInBinding;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.Retrofit.model.LoginViewModel;
+import com.example.Retrofit.serr.TokenSaver;
 
 
 public class LogInActivity extends AppCompatActivity {
@@ -58,20 +53,24 @@ public class LogInActivity extends AppCompatActivity {
         });
         binding.btnLogin.setOnClickListener(v -> {
             Toast.makeText(this, "Try login     ", Toast.LENGTH_SHORT).show();
-            if (binding.checkBox2.isChecked()) {
-                url = "https://studentucas.awamr.com/api/auth/login/delivery";
-
-            } else {
-                url = "https://studentucas.awamr.com/api/auth/login/user";
-
-            }
+            LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
             if (isValid()) {
-                postReq();
+
+            if (binding.checkBox2.isChecked()) {
+                loginViewModel.loginAsDelivery(getApplicationContext(),binding.edEmail.getText().toString().trim(),binding.edPassword.getText().toString().trim());
+                loginViewModel.MutableLiveData.observe(this,loginResponseBaseResponse -> TokenSaver.setToken(getApplicationContext(),loginResponseBaseResponse.getData().get(0).getToken()) );
+                startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
+                finish();
+            } else {
+                loginViewModel.loginAsUser(getApplicationContext(),binding.edEmail.getText().toString().trim(),binding.edPassword.getText().toString().trim());
+                loginViewModel.MutableLiveData.observe(this,loginResponseBaseResponse -> TokenSaver.setToken(getApplicationContext(),loginResponseBaseResponse.getData().get(0).getToken()) );
+                startActivity(new Intent(getApplicationContext(), CustomerHome.class));
+                finish();
             }
+             }
         });
 
     }
-
     private boolean isValid() {
         boolean isValid = false;
         if (binding.edEmail.getText().length() < 10 || binding.edEmail.getText().toString().equals("")) {
@@ -93,56 +92,4 @@ public class LogInActivity extends AppCompatActivity {
         }
         return isValid;
     }
-
-    public void postReq() {
-
-        binding.progressBar2.setVisibility(View.VISIBLE);
-
-        JSONObject jsonObject = new JSONObject(); // انشاء اوبجكت لارساله بالريكويست
-        try {
-            jsonObject.put("email", email); // تخزين المتغيرات بالاوبجكت
-            jsonObject.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }//catch end
-        objectRequest = new JsonObjectRequest(POST, url,  //انشاء ريكويست جديد
-                jsonObject, response -> {
-            //فحص حالة استجابة السيرفر
-            try {
-                if (response.getBoolean("success")) {  // تخزين التوكن بشيرد برييفرنس فى حال نجاح تسجيل الدخول
-
-                    String token = "Bearer " + response.getJSONObject("data").getString("token");
-                    Toast.makeText(getApplicationContext(), token, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), "" + response.getString("message"), Toast.LENGTH_SHORT).show();
-                    TokenSaver.setToken(this, token);//تخزين الكود
-                    Log.e("Statee", TokenSaver.getToken(this));
-                    TokenSaver.setIsDelevery(this, binding.checkBox2.isChecked());// تخزين نوع العميل لاستخدامها بشاشة السبلاش
-                    Log.e("Statee", TokenSaver.IsDelevery(this) + "");
-
-                    if (TokenSaver.IsDelevery(this)) {
-                        Log.e("Statee", "goto DeliveryHome");
-
-                        startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
-                        finish();
-                    } else {
-                        startActivity(new Intent(getApplicationContext(), CustomerHome.class));
-                        finish();
-                    }
-
-
-                } else {
-                    Toast.makeText(LogInActivity.this, " " + response.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            binding.progressBar2.setVisibility(View.INVISIBLE);
-        }, error -> {          //end onResponse and start on eror
-
-            binding.progressBar2.setVisibility(View.INVISIBLE);
-            Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show();
-        });
-        queue.add(objectRequest);
-    } // end method postReq
-
 }//end class LogInActivity
