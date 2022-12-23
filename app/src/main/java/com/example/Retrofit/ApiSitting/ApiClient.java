@@ -1,12 +1,12 @@
-package com.example.Retrofit.Data;
+package com.example.Retrofit.ApiSitting;
 
 import android.content.Context;
 
 import com.example.Retrofit.model.BaseResponse;
 import com.example.Retrofit.model.HomeDeliverReq;
-import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.model.Work;
-import com.example.Retrofit.serr.TokenSaver;
+import com.example.Retrofit.model.authenticationResponse;
+import com.example.Retrofit.services.TokenSaver;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -81,9 +81,21 @@ public class ApiClient {
         return dataInterface.loginDelivery(email, password);
     }
 
-    public Call<BaseResponse> logout() {
-        return dataInterface.logout();
+
+    public Call<BaseResponse<authenticationResponse>> registerDelivery(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("phone") int phone, @Field("work_id") int work_id) {
+        return dataInterface.registerDelivery(name, email, password, phone, work_id);
+    }
+
+    public Call<BaseResponse<authenticationResponse>> registerUser(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("phone") int phone) {
+        return dataInterface.registerUser(name, email, password, phone);
     }
 
 
-}
+    public Call<BaseResponse> logout() {
+        return dataInterface.logout();
+    }
+}//end of ApiClient
+
+
+
+

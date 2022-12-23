@@ -1,4 +1,4 @@
-package com.example.Retrofit;
+package com.example.Retrofit.UserInterfaces;
 
 import static com.android.volley.Request.Method.GET;
 
@@ -15,8 +15,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityCustumerHomeBinding;
-import com.example.Retrofit.model.authenticationViewModel;
-import com.example.Retrofit.serr.TokenSaver;
+import com.example.Retrofit.ViewModel.authenticationViewModel;
+import com.example.Retrofit.services.TokenSaver;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package com.example.Retrofit;
+package com.example.Retrofit.UserInterfaces;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,24 +12,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.Retrofit.R;
+import com.example.Retrofit.ViewModel.WorkViewModel;
 import com.example.Retrofit.databinding.ActivityRegisterBinding;
 import com.example.Retrofit.model.Work;
-import com.example.Retrofit.model.WorkViewModel;
-import com.example.Retrofit.serr.SpinAdapter;
+import com.example.Retrofit.services.SpinAdapter;
 
 import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
-    ArrayList<Work> dataWorkArrayList = new ArrayList<>();
 
     ActivityRegisterBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
     int id;
     SpinAdapter adapter;
     RequestQueue queue;
-
-    JsonObjectRequest objectRequest;
     String username, email, password, phone, name, url;
     boolean isValid = false;
 
@@ -76,7 +73,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         binding.btnRegister.setOnClickListener(v -> {
             if (isValid()) {
-                 //postRegisterReq();
+//do Register req here
+
+
+
             } else {
                 Toast.makeText(this, "please inter data in right method", Toast.LENGTH_SHORT).show();
             }

@@ -1,4 +1,4 @@
-package com.example.Retrofit.model;
+package com.example.Retrofit.ViewModel;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,7 +6,9 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.Retrofit.Data.ApiClient;
+import com.example.Retrofit.ApiSitting.ApiClient;
+import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.Work;
 
 import java.util.ArrayList;
 import java.util.List;

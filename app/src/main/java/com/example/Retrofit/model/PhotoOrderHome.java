@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.Retrofit.Data.ApiClient;
+import com.example.Retrofit.ApiSitting.ApiClient;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

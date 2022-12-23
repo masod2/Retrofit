@@ -1,4 +1,4 @@
-package com.example.Retrofit.Data;
+package com.example.Retrofit.ApiSitting;
 
 
 import com.example.Retrofit.model.BaseResponse;
@@ -15,14 +15,25 @@ import retrofit2.http.POST;
 public interface DataInterface {
     @GET("all/works")
     Call<BaseResponse<Work>> getWorks();
+
+
     @GET("home/deliver")
     Call<BaseResponse<HomeDeliverReq>> homeDeliverReq();
+
     @FormUrlEncoded
     @POST("auth/login/user")
     Call<BaseResponse<authenticationResponse>> loginUser(@Field("email") String email, @Field("password") String password);
     @FormUrlEncoded
     @POST("auth/login/delivery")
     Call<BaseResponse<authenticationResponse>> loginDelivery(@Field("email") String email, @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("auth/register/user")
+    Call<BaseResponse<authenticationResponse>> registerUser(@Field("name") String name,@Field("email") String email, @Field("password") String password,@Field("phone") int phone);
+    @FormUrlEncoded
+    @POST("auth/register/delivery")
+    Call<BaseResponse<authenticationResponse>> registerDelivery(@Field("name") String name,@Field("email") String email, @Field("password") String password,@Field("phone") int phone,@Field("work_id") int work_id);
+
     @GET("auth/logout")
     Call<BaseResponse> logout();
 }

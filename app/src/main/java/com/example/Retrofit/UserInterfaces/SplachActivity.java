@@ -1,4 +1,4 @@
-package com.example.Retrofit;
+package com.example.Retrofit.UserInterfaces;
 
 
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.Retrofit.serr.TokenSaver;
+import com.example.Retrofit.services.TokenSaver;
 import com.example.Retrofit.databinding.ActivitySplachBinding;
 
 

@@ -1,10 +1,10 @@
-package com.example.Retrofit.serr;
+package com.example.Retrofit.services;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.example.Retrofit.LogInActivity;
+import com.example.Retrofit.UserInterfaces.LogInActivity;
 
 public class TokenSaver {
     public static boolean IsDelivery(Context c) {

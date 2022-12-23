@@ -1,4 +1,4 @@
-package com.example.Retrofit;
+package com.example.Retrofit.UserInterfaces;
 
 import static com.android.volley.Request.Method.POST;
 
@@ -17,12 +17,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.databinding.ActivityDeleveryHomeBinding;
 import com.example.Retrofit.model.HomeDeliverReq;
-import com.example.Retrofit.model.HomeDeliverReqViewModel;
+import com.example.Retrofit.ViewModel.HomeDeliverReqViewModel;
 import com.example.Retrofit.model.PhotoOrderHome;
 import com.example.Retrofit.model.Work;
-import com.example.Retrofit.model.authenticationViewModel;
-import com.example.Retrofit.serr.ReAdapter;
-import com.example.Retrofit.serr.TokenSaver;
+import com.example.Retrofit.ViewModel.authenticationViewModel;
+import com.example.Retrofit.services.ReAdapter;
+import com.example.Retrofit.services.TokenSaver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
