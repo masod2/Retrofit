@@ -1,4 +1,4 @@
-package com.example.Retrofit.UserInterfaces;
+package com.example.Retrofit.UserInterfaces.Welcom_splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.Retrofit.R;
+import com.example.Retrofit.UserInterfaces.LogInActivity;
 import com.example.Retrofit.services.TokenSaver;
 import com.example.Retrofit.databinding.ActivityWelcomingBinding;
 

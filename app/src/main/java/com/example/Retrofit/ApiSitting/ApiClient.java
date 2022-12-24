@@ -8,13 +8,10 @@ import com.example.Retrofit.model.Work;
 import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.services.TokenSaver;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -47,18 +44,15 @@ public class ApiClient {
         builder.connectTimeout(60, TimeUnit.SECONDS);
         builder.writeTimeout(60, TimeUnit.SECONDS);
         builder.readTimeout(60, TimeUnit.SECONDS);
-        builder.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                Request request = original.newBuilder()
-                        .header("Content-Type", "application/x-www-form-urlencoded")
-                        .header("Accept", "application/json")
-                        .header("Authorization", TokenSaver.getToken(context))
-                        .method(original.method(), original.body())
-                        .build();
-                return chain.proceed(request);
-            }
+        builder.addInterceptor(chain -> {
+            Request original = chain.request();
+            Request request = original.newBuilder()
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Accept", "application/json")
+                    .header("Authorization", TokenSaver.getToken(context))
+                    .method(original.method(), original.body())
+                    .build();
+            return chain.proceed(request);
         });
         OkHttpClient client = builder.build();
 

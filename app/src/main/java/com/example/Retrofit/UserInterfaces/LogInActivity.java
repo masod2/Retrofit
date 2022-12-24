@@ -6,23 +6,22 @@ import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.R;
+import com.example.Retrofit.ViewModel.AuthenticationViewModel;
 import com.example.Retrofit.databinding.ActivityLogInBinding;
-import com.example.Retrofit.model.BaseResponse;
-import com.example.Retrofit.model.authenticationResponse;
-import com.example.Retrofit.ViewModel.authenticationViewModel;
 import com.example.Retrofit.services.TokenSaver;
 
 
 public class LogInActivity extends AppCompatActivity {
+
     ActivityLogInBinding binding;
     RequestQueue queue;
     String password, email;
@@ -55,28 +54,30 @@ public class LogInActivity extends AppCompatActivity {
 
         });
         binding.btnLogin.setOnClickListener(v -> {
+            binding.progressBar2.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Try login     ", Toast.LENGTH_SHORT).show();
-            authenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(authenticationViewModel.class);
+            AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
             if (isValid()) {
 
                 String email = binding.edEmail.getText().toString().trim();
                 String pasword = binding.edPassword.getText().toString().trim();
                 Log.d("statee", "email" + email + "\n" + "pasword" + pasword);
                 if (binding.checkBox2.isChecked()) {
+                    Log.d("statee","try loginAsDelivery main 1");
                     authenticationViewModel.loginAsDelivery(getApplicationContext(), email, pasword);
-                    authenticationViewModel.MutableLiveData.observe(this, new Observer<BaseResponse<authenticationResponse>>() {
-                        @Override
-                        public void onChanged(BaseResponse<authenticationResponse> authenticationResponseBaseResponse) {
-                            Log.d("statee", "token" + authenticationResponseBaseResponse.toString()+ "\n");
-                            String token = TokenSaver.getToken(getApplicationContext());
-                            Log.d("statee", "token" + token + "\n");
-                             if (token != null) {
-                                startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
-                                finish();
-                            }
+                    Log.d("statee","AuthenticationViewModel.loginAsDelivery generated main 2");
+                    authenticationViewModel.MutableLiveData.observe(this, authenticationResponseBaseResponse -> {
+                        Log.d("statee","AuthenticationViewModel.MutableLiveData.observe main 3");
+
+                        Log.d("statee", "token" + authenticationResponseBaseResponse.getObject().getToken() + "\n");
+
+                        String token = TokenSaver.getToken(getApplicationContext());
+                        Log.d("statee", "token" + token + "\n");
+                        if (token != null) {
+                            startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
+                            finish();
                         }
                     });
-
 
 
                 } else {
@@ -86,10 +87,12 @@ public class LogInActivity extends AppCompatActivity {
                             Toast.makeText(this, TokenSaver.getToken(getApplicationContext()), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), CustomerHome.class));
                             finish();
-                        }  });
+                        }
+                    });
 
                 }
             }
+            binding.progressBar2.setVisibility(View.INVISIBLE);
         });
 
     }

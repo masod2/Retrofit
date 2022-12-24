@@ -1,4 +1,4 @@
-package com.example.Retrofit.UserInterfaces;
+package com.example.Retrofit.UserInterfaces.Welcom_splash;
 
 
 import android.content.Intent;
@@ -8,8 +8,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.Retrofit.services.TokenSaver;
+import com.example.Retrofit.UserInterfaces.CustomerHome;
+import com.example.Retrofit.UserInterfaces.DeliveryHome;
+import com.example.Retrofit.UserInterfaces.LogInActivity;
 import com.example.Retrofit.databinding.ActivitySplachBinding;
+import com.example.Retrofit.services.TokenSaver;
 
 
 public class SplachActivity extends AppCompatActivity {

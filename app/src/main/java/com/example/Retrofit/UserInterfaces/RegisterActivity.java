@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.R;
+import com.example.Retrofit.ViewModel.AuthenticationViewModel;
 import com.example.Retrofit.ViewModel.WorkViewModel;
 import com.example.Retrofit.databinding.ActivityRegisterBinding;
 import com.example.Retrofit.model.Work;
@@ -24,10 +25,11 @@ import java.util.ArrayList;
 public class RegisterActivity extends AppCompatActivity {
 
     ActivityRegisterBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
-    int id;
+    int phone;
     SpinAdapter adapter;
     RequestQueue queue;
-    String username, email, password, phone, name, url;
+    String username, email, password, name, url;
+
     boolean isValid = false;
 
     @Override
@@ -72,11 +74,18 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         binding.btnRegister.setOnClickListener(v -> {
+            Work work = (Work) binding.spinner.getSelectedItem();
+            int workId = work.getId();
+            AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+
             if (isValid()) {
 //do Register req here
+                if (binding.checkBox.isChecked() ) {
+                    authenticationViewModel.registerAsDelivery(getApplicationContext(),name,email,password,phone,workId);
 
-
-
+                }else {
+                    authenticationViewModel.registerAsUser(getApplicationContext(),name,email,password,phone);
+                }
             } else {
                 Toast.makeText(this, "please inter data in right method", Toast.LENGTH_SHORT).show();
             }
@@ -89,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
         WorkViewModel workViewModel = new ViewModelProvider(this).get(WorkViewModel.class);
         workViewModel.getWorks(getApplicationContext());
         workViewModel.listMutableLiveData.observe(this, works -> {
-            adapter = new SpinAdapter(getApplicationContext() , android.R.layout.simple_spinner_item, (ArrayList<Work>) works);
+            adapter = new SpinAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, (ArrayList<Work>) works);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             binding.spinner.setAdapter(adapter);
             binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -98,6 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Work work = (Work) binding.spinner.getSelectedItem();
                     Toast.makeText(RegisterActivity.this, "Name: " + work.getName() + "\nid: " + work.getId() + "\n ", Toast.LENGTH_SHORT).show();
                 }
+
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
@@ -128,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
                     isValid = false;
 
                 } else {
-                    phone = binding.edPhone.getText().toString().trim();
+                    phone = Integer.parseInt(binding.edPhone.getText().toString().trim());
                     if (binding.edPassword.getText().length() < 8) {
                         binding.edPassword.setError("  This field is required Do not leave it empty The password  must consist of 8 or more   digits ");
                         binding.edPassword.requestFocus();
