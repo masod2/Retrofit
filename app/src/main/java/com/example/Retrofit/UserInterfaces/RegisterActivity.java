@@ -73,13 +73,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         binding.btnRegister.setOnClickListener(v -> {
-            Work work = (Work) binding.spinner.getSelectedItem();
-            int workId = work.getId();
             AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
-
             if (isValid()) {
 //do Register req here
                 if (binding.checkBox.isChecked() ) {
+                    Work work = (Work) binding.spinner.getSelectedItem();
+                    int workId = work.getId();
                     authenticationViewModel.registerAsDelivery(getApplicationContext(),username,email,password,phone,workId);
 
                 }else {
