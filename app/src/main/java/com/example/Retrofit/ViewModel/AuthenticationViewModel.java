@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.Retrofit.ApiSitting.ApiClient;
 import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.BaseResponseobj;
 import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.services.TokenSaver;
 
@@ -17,27 +18,31 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AuthenticationViewModel extends ViewModel {
-    public MutableLiveData<BaseResponse<authenticationResponse>> MutableLiveData = new MutableLiveData<>();
+    public MutableLiveData<authenticationResponse> MutableLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> StringMutableLiveData = new MutableLiveData<String>();
 
     public void loginAsUser(Context context, String email, String password) {
-        ApiClient.getINSTANCE(context).loginUser(email, password).enqueue(new Callback<BaseResponse<authenticationResponse>>() {
+        Log.d("statee", "loginAsUser in viwe model 1");
+
+        ApiClient.getINSTANCE(context).loginUser(email, password).enqueue(new Callback<BaseResponseobj<authenticationResponse>>() {
             @Override
-            public void onResponse(Call<BaseResponse<authenticationResponse>> call, Response<BaseResponse<authenticationResponse>> response) {
+            public void onResponse(Call<BaseResponseobj<authenticationResponse>> call, Response<BaseResponseobj<authenticationResponse>> response) {
+                Log.d("statee", "loginAsUser onResponse viwe model 2");
                 Log.d("statee", response.isSuccessful() + "");
                 if (response.isSuccessful()) {
                     Log.d("statee", "response.isSuccessful 1");
                     if (response.body().success) {
                         Log.d("statee", "response.body().success 2 ");
 
-                        if (response.body().getObject().getToken() == null) {
-                            Log.d("statee", "response.body().getObject().getToken()!=null 3");
+                        if (response.body().getObject() != null) {
+                            Log.d("statee", "response.body().getObject() != null 3");
 
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
 
                         } else {
-                            Log.e("statee", "response.body().getObject().getToken()==null ");
+                            Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
 
@@ -48,13 +53,15 @@ public class AuthenticationViewModel extends ViewModel {
                     }
                     Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.e("statee", "response. NOT  Successful 1");
+                    Log.e("statee", "response. NOT  Successful 1\n" + response.errorBody().toString());
 
                 }
+
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<authenticationResponse>> call, Throwable t) {
+            public void onFailure(Call<BaseResponseobj<authenticationResponse>> call, Throwable t) {
+                Log.e("statee", "loginAsUser onFailure viwe model 2\n" + t.getMessage());
 
             }
         });
@@ -62,56 +69,57 @@ public class AuthenticationViewModel extends ViewModel {
 
     public void loginAsDelivery(Context context, String email, String password) {
         Log.d("statee", "loginAsDelivery in viwe model 1 ");
-        ApiClient.getINSTANCE(context).loginDelivery(email, password).enqueue(new Callback<BaseResponse<authenticationResponse>>() {
-             @Override
-            public void onResponse(Call<BaseResponse<authenticationResponse>> call, Response<BaseResponse<authenticationResponse>> response) {
-                 Log.d("statee", "loginAsDelivery onResponse viwe model 2");
-                 Log.d("statee", response.isSuccessful() + "");
+        ApiClient.getINSTANCE(context).loginDelivery(email, password).enqueue(new Callback<BaseResponseobj<authenticationResponse>>() {
+            @Override
+            public void onResponse(Call<BaseResponseobj<authenticationResponse>> call, Response<BaseResponseobj<authenticationResponse>> response) {
+                Log.d("statee", "loginAsDelivery onResponse viwe model 2");
+                Log.d("statee", response.isSuccessful() + "");
                 if (response.isSuccessful()) {
                     Log.d("statee", "response.isSuccessful 1");
                     if (response.body().success) {
                         Log.d("statee", "response.body().success 2 ");
 
-                        if (response.body().getObject().getToken() == null) {
-                            Log.d("statee", "response.body().getObject().getToken()!=null 3");
-
+                        if (response.body().getObject() != null) {
+                            Log.d("statee", "response.body().getObject() != null 3");
+                            StringMutableLiveData.setValue(" Fail ");
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
 
                         } else {
-                            Log.e("statee", "response.body().getObject().getToken()==null ");
+                            Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
 
                     } else {
                         Log.e("statee", "response.body(). NOT  success 2 ");
                         Log.e("statee", response.body().message);
-
+                        StringMutableLiveData.setValue(response.body().message);
                     }
                     Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.e("statee", "response. NOT  Successful 1");
+                    Log.e("statee", "response. NOT  Successful 1\n" + response.errorBody().toString());
 
                 }
 
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<authenticationResponse>> call, Throwable t) {
-                Log.e("statee", "loginAsDelivery onFailure viwe model 2");
+            public void onFailure(Call<BaseResponseobj<authenticationResponse>> call, Throwable t) {
+                Log.e("statee", "loginAsDelivery onFailure viwe model 2\n" + t.getMessage());
+                StringMutableLiveData.setValue(" Connect onFailure ");
 
             }
         });
 
     }//end of loginAsDelivery
 
-    public void registerAsDelivery(Context context, String name, String email, String password, int phone, int work_id) {
+    public void registerAsDelivery(Context context, String name, String email, String password, String phone, int work_id) {
         Log.d("statee", "registerAsDelivery in viwe model 1 ");
 
-        ApiClient.getINSTANCE(context).registerDelivery(name, email, password, phone, work_id).enqueue(new Callback<BaseResponse<authenticationResponse>>() {
+        ApiClient.getINSTANCE(context).registerDelivery(name, email, password, phone, work_id).enqueue(new Callback<BaseResponseobj<authenticationResponse>>() {
             @Override
-            public void onResponse(Call<BaseResponse<authenticationResponse>> call, Response<BaseResponse<authenticationResponse>> response) {
+            public void onResponse(Call<BaseResponseobj<authenticationResponse>> call, Response<BaseResponseobj<authenticationResponse>> response) {
                 Log.d("statee", "registerAsDelivery onResponse viwe model 2");
                 Log.d("statee", response.isSuccessful() + "");
                 if (response.isSuccessful()) {
@@ -119,46 +127,49 @@ public class AuthenticationViewModel extends ViewModel {
                     if (response.body().success) {
                         Log.d("statee", "response.body().success 2 ");
 
-                        if (response.body().getObject().getToken() == null) {
-                            Log.d("statee", "response.body().getObject().getToken()!=null 3");
+                        if (response.body().getObject() != null) {
+                            Log.d("statee", "response.body().getObject() != null 3");
 
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
+                            StringMutableLiveData.setValue(" Fail ");
 
                         } else {
-                            Log.e("statee", "response.body().getObject().getToken()==null ");
+                            Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
 
                     } else {
                         Log.e("statee", "response.body(). NOT  success 2 ");
                         Log.e("statee", response.body().message);
+                        StringMutableLiveData.setValue(response.body().message);
 
                     }
                     Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.e("statee", "response. NOT  Successful 1");
+                    Log.e("statee", "response. NOT  Successful 1\n" + response.errorBody().toString());
+                    StringMutableLiveData.setValue(" Connect not Successful");
 
                 }
 
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<authenticationResponse>> call, Throwable t) {
-                Log.e("statee", "registerAsDelivery onFailure viwe model 2");
+            public void onFailure(Call<BaseResponseobj<authenticationResponse>> call, Throwable t) {
+                Log.e("statee", "registerAsDelivery onFailure viwe model 2\n" + t.getMessage());
+                StringMutableLiveData.setValue(" Connect onFailure ");
 
             }
         });
     }//end of registerAsDelivery
 
-    public void registerAsUser(Context context, String name, String email, String password, int phone) {
+    public void registerAsUser(Context context, String name, String email, String password, String phone) {
         Log.d("statee", "registerAsUser in viwe model 1 ");
 
-        ApiClient.getINSTANCE(context).registerUser(name, email, password, phone).enqueue(new Callback<BaseResponse<authenticationResponse>>() {
+        ApiClient.getINSTANCE(context).registerUser(name, email, password, phone).enqueue(new Callback<BaseResponseobj<authenticationResponse>>() {
             @Override
-            public void onResponse(Call<BaseResponse<authenticationResponse>> call, Response<BaseResponse<authenticationResponse>> response) {
-
+            public void onResponse(Call<BaseResponseobj<authenticationResponse>> call, Response<BaseResponseobj<authenticationResponse>> response) {
                 Log.d("statee", "registerAsUser onResponse viwe model 2");
                 Log.d("statee", response.isSuccessful() + "");
                 if (response.isSuccessful()) {
@@ -166,15 +177,16 @@ public class AuthenticationViewModel extends ViewModel {
                     if (response.body().success) {
                         Log.d("statee", "response.body().success 2 ");
 
-                        if (response.body().getObject().getToken() == null) {
-                            Log.d("statee", "response.body().getObject().getToken()!=null 3");
+                        if (response.body().getObject() != null) {
+                            Log.d("statee", "response.body().getObject() != null 3");
 
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
+                            StringMutableLiveData.setValue(" Fail");
 
                         } else {
-                            Log.e("statee", "response.body().getObject().getToken()==null ");
+                            Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
 
@@ -185,15 +197,15 @@ public class AuthenticationViewModel extends ViewModel {
                     }
                     Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.e("statee", "response. NOT  Successful 1");
+                    Log.e("statee", "response. NOT  Successful 1\n" + response.errorBody().toString());
 
                 }
 
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<authenticationResponse>> call, Throwable t) {
-                Log.e("statee", "registerAsUser onFailure viwe model 2");
+            public void onFailure(Call<BaseResponseobj<authenticationResponse>> call, Throwable t) {
+                Log.e("statee", "registerAsUser onFailure viwe model 2\n" + t.getMessage());
 
             }
         });
@@ -204,17 +216,21 @@ public class AuthenticationViewModel extends ViewModel {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                 if (response.isSuccessful()) {
-                    MutableLiveData.setValue(response.body());
                     TokenSaver.logout(context);
+                    StringMutableLiveData.setValue(response.body().message);
+
                 } else {
-                    MutableLiveData.setValue(null);
+                    StringMutableLiveData.setValue("التوكن منتهى الصلاحية");
 
                 }
+
 
             }
 
             @Override
             public void onFailure(Call<BaseResponse> call, Throwable t) {
+                StringMutableLiveData.setValue(t.getMessage());
+                Log.e("statee", "Log out onFailure\n " + t.getMessage());
 
             }
         });

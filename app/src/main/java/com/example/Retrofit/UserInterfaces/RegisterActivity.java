@@ -25,10 +25,9 @@ import java.util.ArrayList;
 public class RegisterActivity extends AppCompatActivity {
 
     ActivityRegisterBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
-    int phone;
-    SpinAdapter adapter;
+     SpinAdapter adapter;
     RequestQueue queue;
-    String username, email, password, name, url;
+    String username, email, password, phone, url;
 
     boolean isValid = false;
 
@@ -81,10 +80,10 @@ public class RegisterActivity extends AppCompatActivity {
             if (isValid()) {
 //do Register req here
                 if (binding.checkBox.isChecked() ) {
-                    authenticationViewModel.registerAsDelivery(getApplicationContext(),name,email,password,phone,workId);
+                    authenticationViewModel.registerAsDelivery(getApplicationContext(),username,email,password,phone,workId);
 
                 }else {
-                    authenticationViewModel.registerAsUser(getApplicationContext(),name,email,password,phone);
+                    authenticationViewModel.registerAsUser(getApplicationContext(),username,email,password,phone);
                 }
             } else {
                 Toast.makeText(this, "please inter data in right method", Toast.LENGTH_SHORT).show();
@@ -138,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
                     isValid = false;
 
                 } else {
-                    phone = Integer.parseInt(binding.edPhone.getText().toString().trim());
+                    phone = binding.edPhone.getText().toString().trim();
                     if (binding.edPassword.getText().length() < 8) {
                         binding.edPassword.setError("  This field is required Do not leave it empty The password  must consist of 8 or more   digits ");
                         binding.edPassword.requestFocus();

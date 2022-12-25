@@ -3,6 +3,7 @@ package com.example.Retrofit.ApiSitting;
 import android.content.Context;
 
 import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.BaseResponseobj;
 import com.example.Retrofit.model.HomeDeliverReq;
 import com.example.Retrofit.model.Work;
 import com.example.Retrofit.model.authenticationResponse;
@@ -67,20 +68,20 @@ public class ApiClient {
         return dataInterface.homeDeliverReq();
     }
 
-    public Call<BaseResponse<authenticationResponse>> loginUser(@Field("email") String email, @Field("password") String password) {
+    public Call<BaseResponseobj<authenticationResponse>> loginUser(@Field("email") String email, @Field("password") String password) {
         return dataInterface.loginUser(email, password);
     }
 
-    public Call<BaseResponse<authenticationResponse>> loginDelivery(@Field("email") String email, @Field("password") String password) {
+    public Call<BaseResponseobj<authenticationResponse>> loginDelivery(@Field("email") String email, @Field("password") String password) {
         return dataInterface.loginDelivery(email, password);
     }
 
 
-    public Call<BaseResponse<authenticationResponse>> registerDelivery(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("phone") int phone, @Field("work_id") int work_id) {
+    public Call<BaseResponseobj<authenticationResponse>> registerDelivery(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("phone") String phone, @Field("work_id") int work_id) {
         return dataInterface.registerDelivery(name, email, password, phone, work_id);
     }
 
-    public Call<BaseResponse<authenticationResponse>> registerUser(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("phone") int phone) {
+    public Call<BaseResponseobj<authenticationResponse>> registerUser(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("phone") String phone) {
         return dataInterface.registerUser(name, email, password, phone);
     }
 

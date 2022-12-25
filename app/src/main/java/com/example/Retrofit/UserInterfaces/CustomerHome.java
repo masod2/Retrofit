@@ -14,8 +14,8 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.Retrofit.databinding.ActivityCustumerHomeBinding;
 import com.example.Retrofit.ViewModel.AuthenticationViewModel;
+import com.example.Retrofit.databinding.ActivityCustumerHomeBinding;
 import com.example.Retrofit.services.TokenSaver;
 
 import org.json.JSONArray;
@@ -25,9 +25,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class    CustomerHome extends AppCompatActivity {
+public class CustomerHome extends AppCompatActivity {
     ActivityCustumerHomeBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
-     String url;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,19 @@ public class    CustomerHome extends AppCompatActivity {
             binding.progressBar4.setVisibility(View.VISIBLE);
             AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
             authenticationViewModel.logout(getApplicationContext());
+
+            authenticationViewModel.StringMutableLiveData.observe(this, res -> {
+                if (res.equals("تم تسجيل الخروج")) {
+                    startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
+                    finish();
+                } else {
+                    Toast.makeText(this, res, Toast.LENGTH_SHORT).show();
+
+                }
+            });
             binding.progressBar4.setVisibility(View.INVISIBLE);
 
-            startActivity(new Intent(getApplicationContext(), LogInActivity.class)); // يتم الانتقال لشاشة تسجيل الدخول بكل الحالات
-            finish();
+
         });
         binding.loadcu.setOnClickListener(v -> {
             url = "https://studentucas.awamr.com/api/order/un/complete/user";

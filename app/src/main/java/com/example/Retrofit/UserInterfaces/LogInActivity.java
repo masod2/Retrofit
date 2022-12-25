@@ -66,14 +66,14 @@ public class LogInActivity extends AppCompatActivity {
                     Log.d("statee","try loginAsDelivery main 1");
                     authenticationViewModel.loginAsDelivery(getApplicationContext(), email, pasword);
                     Log.d("statee","AuthenticationViewModel.loginAsDelivery generated main 2");
-                    authenticationViewModel.MutableLiveData.observe(this, authenticationResponseBaseResponse -> {
+                    authenticationViewModel.StringMutableLiveData.observe(this, res -> {
                         Log.d("statee","AuthenticationViewModel.MutableLiveData.observe main 3");
 
-                        Log.d("statee", "token" + authenticationResponseBaseResponse.getObject().getToken() + "\n");
 
                         String token = TokenSaver.getToken(getApplicationContext());
                         Log.d("statee", "token" + token + "\n");
                         if (token != null) {
+                            TokenSaver.setIsDelivery(getApplicationContext(),true);//لحفظ نوع المستخدم لاستعمالها بالسبلاش
                             startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
                             finish();
                         }
