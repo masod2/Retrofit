@@ -13,7 +13,7 @@ public class BaseResponseobj<Model> {
     @SerializedName("message")
     @Expose
     public String message;
-    @SerializedName("object")
+    @SerializedName("data")
     @Expose
     public Model data;
     public int getCode() {

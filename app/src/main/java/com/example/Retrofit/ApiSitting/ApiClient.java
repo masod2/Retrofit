@@ -50,7 +50,7 @@ public class ApiClient {
             Request request = original.newBuilder()
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Accept", "application/json")
-                    .header("Authorization", TokenSaver.getToken(context))
+                    .header("Authorization","Bearer " +TokenSaver.getToken(context))
                     .method(original.method(), original.body())
                     .build();
             return chain.proceed(request);
