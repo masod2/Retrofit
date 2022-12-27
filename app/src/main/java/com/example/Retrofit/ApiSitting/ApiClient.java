@@ -3,6 +3,7 @@ package com.example.Retrofit.ApiSitting;
 import android.content.Context;
 
 import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.BaseResponseString;
 import com.example.Retrofit.model.BaseResponseobj;
 import com.example.Retrofit.model.HomeDeliverReq;
 import com.example.Retrofit.model.Work;
@@ -86,7 +87,7 @@ public class ApiClient {
     }
 
 
-    public Call<BaseResponse> logout() {
+    public Call<BaseResponseString> logout() {
         return dataInterface.logout();
     }
 }//end of ApiClient

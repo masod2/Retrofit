@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.Retrofit.ApiSitting.ApiClient;
-import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.BaseResponseString;
 import com.example.Retrofit.model.BaseResponseobj;
 import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.services.TokenSaver;
@@ -40,12 +40,13 @@ public class AuthenticationViewModel extends ViewModel {
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
+                            StringMutableLiveData.setValue(response.body().getMessage());
 
                         } else {
                             Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
-
+                        Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e("statee", "response.body(). NOT  success 2 ");
                         Log.e("statee", response.body().message);
@@ -72,7 +73,7 @@ public class AuthenticationViewModel extends ViewModel {
         ApiClient.getINSTANCE(context).loginDelivery(email, password).enqueue(new Callback<BaseResponseobj<authenticationResponse>>() {
             @Override
             public void onResponse(Call<BaseResponseobj<authenticationResponse>> call, Response<BaseResponseobj<authenticationResponse>> response) {
-                Log.d("statee", "loginAsDelivery onResponse viwe model 2");
+                Log.d("statee", "loginAsUser onResponse viwe model 2");
                 Log.d("statee", response.isSuccessful() + "");
                 if (response.isSuccessful()) {
                     Log.d("statee", "response.isSuccessful 1");
@@ -81,20 +82,21 @@ public class AuthenticationViewModel extends ViewModel {
 
                         if (response.body().getObject() != null) {
                             Log.d("statee", "response.body().getObject() != null 3");
-                            StringMutableLiveData.setValue(" Fail ");
+
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
+                            StringMutableLiveData.setValue(response.body().getMessage());
 
                         } else {
                             Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
-
+                        Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e("statee", "response.body(). NOT  success 2 ");
                         Log.e("statee", response.body().message);
-                        StringMutableLiveData.setValue(response.body().message);
+
                     }
                     Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
                 } else {
@@ -106,8 +108,7 @@ public class AuthenticationViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<BaseResponseobj<authenticationResponse>> call, Throwable t) {
-                Log.e("statee", "loginAsDelivery onFailure viwe model 2\n" + t.getMessage());
-                StringMutableLiveData.setValue(" Connect onFailure ");
+                Log.e("statee", "loginAsUser onFailure viwe model 2\n" + t.getMessage());
 
             }
         });
@@ -133,12 +134,13 @@ public class AuthenticationViewModel extends ViewModel {
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
-                            StringMutableLiveData.setValue(" Fail ");
+                            StringMutableLiveData.setValue(response.body().getMessage());
 
                         } else {
                             Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
+                        Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
 
                     } else {
                         Log.e("statee", "response.body(). NOT  success 2 ");
@@ -183,12 +185,13 @@ public class AuthenticationViewModel extends ViewModel {
                             String token = response.body().getObject().getToken();
                             Log.d("statee", token);
                             TokenSaver.setToken(context, token);
-                            StringMutableLiveData.setValue(" Fail");
+                            StringMutableLiveData.setValue(response.body().getMessage());
 
                         } else {
                             Log.e("statee", "response.body().getObject()==null ");
                         }
                         Log.d("statee", response.body().message);
+                        Toast.makeText(context, response.body().message, Toast.LENGTH_SHORT).show();
 
                     } else {
                         Log.e("statee", "response.body(). NOT  success 2 ");
@@ -212,25 +215,26 @@ public class AuthenticationViewModel extends ViewModel {
     }
 
     public void logout(Context context) {
-        ApiClient.getINSTANCE(context).logout().enqueue(new Callback<BaseResponse>() {
+        ApiClient.getINSTANCE(context).logout().enqueue(new Callback<BaseResponseString>() {
             @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+            public void onResponse(Call<BaseResponseString> call, Response<BaseResponseString> response) {
                 if (response.isSuccessful()) {
                     TokenSaver.logout(context);
-                    StringMutableLiveData.setValue(response.body().message);
+                    StringMutableLiveData.setValue(response.body().getMessage());
 
                 } else {
-                    StringMutableLiveData.setValue("التوكن منتهى الصلاحية");
-
+                    StringMutableLiveData.setValue("التوكن منتهى الصلاحية ");
+                    TokenSaver.logout(context);//سيتم حذف التوكن وان كان منتهى الصلاحية
                 }
 
 
             }
 
             @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
+            public void onFailure(Call<BaseResponseString> call, Throwable t) {
                 StringMutableLiveData.setValue(t.getMessage());
                 Log.e("statee", "Log out onFailure\n " + t.getMessage());
+                TokenSaver.logout(context);//سيتم حذف التوكن بكل الحالات
 
             }
         });

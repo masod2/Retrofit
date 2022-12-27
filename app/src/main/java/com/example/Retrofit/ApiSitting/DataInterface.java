@@ -2,10 +2,11 @@ package com.example.Retrofit.ApiSitting;
 
 
 import com.example.Retrofit.model.BaseResponse;
+import com.example.Retrofit.model.BaseResponseString;
 import com.example.Retrofit.model.BaseResponseobj;
 import com.example.Retrofit.model.HomeDeliverReq;
-import com.example.Retrofit.model.authenticationResponse;
 import com.example.Retrofit.model.Work;
+import com.example.Retrofit.model.authenticationResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -35,5 +36,5 @@ public interface DataInterface {
     Call<BaseResponseobj<authenticationResponse>> registerDelivery(@Field("name") String name,@Field("email") String email, @Field("password") String password,@Field("phone") String phone,@Field("work_id") int work_id);
 
     @GET("auth/logout")
-    Call<BaseResponse> logout();
+    Call<BaseResponseString> logout();
 }

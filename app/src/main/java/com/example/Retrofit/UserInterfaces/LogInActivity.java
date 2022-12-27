@@ -54,37 +54,31 @@ public class LogInActivity extends AppCompatActivity {
 
         });
         binding.btnLogin.setOnClickListener(v -> {
+            binding.btnLogin.setClickable(false);
             binding.progressBar2.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Try login     ", Toast.LENGTH_SHORT).show();
-            AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+             AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
             if (isValid()) {
-
-                String email = binding.edEmail.getText().toString().trim();
-                String pasword = binding.edPassword.getText().toString().trim();
-                Log.d("statee", "email" + email + "\n" + "pasword" + pasword);
+                Log.d("statee", "email" + email + "\n" + "pasword" + password);
                 if (binding.checkBox2.isChecked()) {
                     Log.d("statee","try loginAsDelivery main 1");
-                    authenticationViewModel.loginAsDelivery(getApplicationContext(), email, pasword);
+                    authenticationViewModel.loginAsDelivery(getApplicationContext(), email, password);
                     Log.d("statee","AuthenticationViewModel.loginAsDelivery generated main 2");
                     authenticationViewModel.StringMutableLiveData.observe(this, res -> {
                         Log.d("statee","AuthenticationViewModel.MutableLiveData.observe main 3");
 
-
-                        String token = TokenSaver.getToken(getApplicationContext());
-                        Log.d("statee", "token" + token + "\n");
-                        if (token != null) {
-                            TokenSaver.setIsDelivery(getApplicationContext(),true);//لحفظ نوع المستخدم لاستعمالها بالسبلاش
+                        if (!TokenSaver.getToken(getApplicationContext()).equals("")) {
+                            TokenSaver.setIsDelevery(getApplicationContext(),true);//لحفظ نوع المستخدم لاستعمالها بالسبلاش
                             startActivity(new Intent(getApplicationContext(), DeliveryHome.class));
                             finish();
                         }
                     });
+                } else if (!binding.checkBox2.isChecked()){
+                    Log.d("statee","try loginAsUser main 1");
 
-
-                } else {
                     authenticationViewModel.loginAsUser(getApplicationContext(), binding.edEmail.getText().toString().trim(), binding.edPassword.getText().toString().trim());
-                    authenticationViewModel.MutableLiveData.observe(this, loginResponseBaseResponse -> {
-                        if (!TokenSaver.getToken(this).equals("")) {
-                            Toast.makeText(this, TokenSaver.getToken(getApplicationContext()), Toast.LENGTH_SHORT).show();
+                    authenticationViewModel.StringMutableLiveData.observe(this, loginResponseBaseResponse -> {
+                        if (!TokenSaver.getToken(getApplicationContext()).equals("")) {
+                            Toast.makeText(getApplicationContext(), TokenSaver.getToken(getApplicationContext()), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), CustomerHome.class));
                             finish();
                         }
@@ -93,6 +87,8 @@ public class LogInActivity extends AppCompatActivity {
                 }
             }
             binding.progressBar2.setVisibility(View.INVISIBLE);
+            binding.btnLogin.setClickable(true);
+
         });
 
     }

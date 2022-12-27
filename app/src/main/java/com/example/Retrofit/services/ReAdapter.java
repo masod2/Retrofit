@@ -29,13 +29,24 @@ public class ReAdapter extends RecyclerView.Adapter<ReAdapter.RecHolder> {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false); // اضافة التصميم
         return new RecHolder(view);
     }
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+    private OnItemClickListener mListener;
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
     @Override
     public void onBindViewHolder(@NonNull RecHolder holder, int position) {
         HomeDeliverReq datum = datumArrayList.get(position);
         //
         holder.bind(datum);
-
+        holder.itemView.setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onItemClick(holder.getAdapterPosition());
+            }
+        });
     }
 
     //حجم التكرا عدد العناصر

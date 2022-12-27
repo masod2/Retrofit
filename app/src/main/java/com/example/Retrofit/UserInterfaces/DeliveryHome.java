@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.Retrofit.ViewModel.AuthenticationViewModel;
 import com.example.Retrofit.ViewModel.HomeDeliverReqViewModel;
 import com.example.Retrofit.databinding.ActivityDeleveryHomeBinding;
-import com.example.Retrofit.model.HomeDeliverReq;
 import com.example.Retrofit.services.ReAdapter;
 import com.example.Retrofit.services.TokenSaver;
-
-import java.util.ArrayList;
 
 public class DeliveryHome extends AppCompatActivity {
     ActivityDeleveryHomeBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
@@ -33,9 +30,16 @@ public class DeliveryHome extends AppCompatActivity {
             homeDeliverReqViewModel.homeDeliverReq(getApplicationContext());
             homeDeliverReqViewModel.MutableLiveData.observe(this, homeDeliverReqs -> {
                 if (homeDeliverReqs != null) {
-                    ReAdapter adapter = new ReAdapter((ArrayList<HomeDeliverReq>) homeDeliverReqs);
-                    binding.resy.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    binding.resy.setAdapter(adapter);
+                    ReAdapter adapter = new ReAdapter(homeDeliverReqs);
+                    adapter.setOnItemClickListener(position -> {
+                        TokenSaver.setPositionLong(getApplicationContext(), homeDeliverReqs.get(position).getLat());
+                        TokenSaver.setPositionLong(getApplicationContext(), homeDeliverReqs.get(position).getLong());
+
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                    });
+                    binding.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    binding.recyclerView.setAdapter(adapter);
+
                 }
             });
 
@@ -52,20 +56,14 @@ public class DeliveryHome extends AppCompatActivity {
             authenticationViewModel.logout(getApplicationContext());
 
             authenticationViewModel.StringMutableLiveData.observe(this, res -> {
-                if (res.equals("تم تسجيل الخروج")) {
-                    startActivity(new Intent(getApplicationContext(), LogInActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(this, res, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+                finish();
 
-                }
             });
         });
 
 
     }
-
-
 
 
 }

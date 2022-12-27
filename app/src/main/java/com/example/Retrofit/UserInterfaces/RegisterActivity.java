@@ -11,8 +11,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.Retrofit.R;
 import com.example.Retrofit.ViewModel.AuthenticationViewModel;
 import com.example.Retrofit.ViewModel.WorkViewModel;
@@ -25,11 +23,10 @@ import java.util.ArrayList;
 public class RegisterActivity extends AppCompatActivity {
 
     ActivityRegisterBinding binding; //عمل بايندينج للعناصر بعد تفعيلها بالجريدل
-     SpinAdapter adapter;
-    RequestQueue queue;
+    SpinAdapter adapter;
     String username, email, password, phone, url;
-
     boolean isValid = false;
+    boolean dataExtracted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());//تعريف الباينديج على الواجهة
         setContentView(binding.getRoot()); // عمل فيو لها
-        queue = Volley.newRequestQueue(this);
+
         binding.show.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 binding.show.setBackground(getDrawable(R.drawable.ic_baseline_lock_open));
@@ -49,15 +46,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
         binding.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (binding.checkBox.isChecked()) {
-                getData();
-
-                url = "https://studentucas.awamr.com/api/auth/register/delivery";
-
+                binding.spinner.setVisibility(View.VISIBLE);
+                if (!dataExtracted) {
+                    getData();
+                }
             } else {
                 binding.spinner.setVisibility(View.INVISIBLE);
-                url = " https://studentucas.awamr.com/api/auth/register/user";
-
-
             }
         });
         binding.gotoLogInBtn.setOnClickListener(v -> {
@@ -75,17 +69,31 @@ public class RegisterActivity extends AppCompatActivity {
         binding.btnRegister.setOnClickListener(v -> {
             AuthenticationViewModel authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
             if (isValid()) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.btnRegister.setClickable(false);
 //do Register req here
-                if (binding.checkBox.isChecked() ) {
+                if (binding.checkBox.isChecked()) {
                     Work work = (Work) binding.spinner.getSelectedItem();
                     int workId = work.getId();
-                    authenticationViewModel.registerAsDelivery(getApplicationContext(),username,email,password,phone,workId);
-
-                }else {
-                    authenticationViewModel.registerAsUser(getApplicationContext(),username,email,password,phone);
+                    authenticationViewModel.registerAsDelivery(getApplicationContext(), username, email, password, phone, workId);
+                    authenticationViewModel.StringMutableLiveData.observe(this, s -> {
+                        if (s == "تسجيل دخول العامل بنجاح") {
+                            startActivity(new Intent(getApplicationContext(), CustomerHome.class));
+                            finish();
+                        }
+                    });
+                } else {
+                    authenticationViewModel.registerAsUser(getApplicationContext(), username, email, password, phone);
+                    authenticationViewModel.StringMutableLiveData.observe(this, s -> {
+                        if (s == "تسجيل دخول العامل بنجاح") {
+                            startActivity(new Intent(getApplicationContext(), CustomerHome.class));
+                            finish();
+                        }
+                    });
                 }
-            } else {
-                Toast.makeText(this, "please inter data in right method", Toast.LENGTH_SHORT).show();
+                binding.btnRegister.setClickable(true);
+                binding.progressBar.setVisibility(View.INVISIBLE);
+
             }
         });
 
@@ -110,9 +118,11 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-            binding.spinner.setVisibility(View.VISIBLE);
+             dataExtracted = true;
+
         });
     }
+
     public boolean isValid() {
 
 
